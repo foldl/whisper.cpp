@@ -30,6 +30,8 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+        with:
+          image: tonistiigi/binfmt:qemu-v7.0.0-28
 
       - name: Build ${{ matrix.arch }}
         run: |
@@ -64,6 +66,7 @@ jobs:
             -w /workspace ${{ env.ubuntu_image }} /bin/sh -c '
             set -e
             apt update
+            apt-get --reinstall install libc-bin
             apt install -y build-essential libsdl2-dev cmake git
             cmake -B build -DGGML_NATIVE=OFF -DGGML_CPU_ARM_ARCH=armv8-a
             cmake --build build --config Release -j $(nproc)'
@@ -180,6 +183,7 @@ jobs:
             -w /workspace ${{ env.ubuntu_image }} /bin/sh -c '
             set -e
             apt update
+            apt-get --reinstall install libc-bin
             apt install -y build-essential cmake libsdl2-dev git
             cmake . -DWHISPER_SDL2=ON -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DGGML_NATIVE=OFF -DGGML_CPU_ARM_ARCH=armv8-a
             make
@@ -239,6 +243,7 @@ jobs:
             -w /workspace ${{ env.ubuntu_image }} /bin/sh -c '
             set -e
             apt update
+            apt-get --reinstall install libc-bin
             apt install -y clang build-essential cmake libsdl2-dev git
             cmake . -DWHISPER_SDL2=ON -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang
             make
